@@ -1,0 +1,5 @@
+Django>=4.2.1, <4.3
+requests==2.31.0
+asgiref==3.6.0
+sqlparse==0.4.4
+psycopg2-binary>=2.9.6,<2.10
