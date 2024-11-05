@@ -6,15 +6,18 @@ services:
     build:
       context: .
     ports:
-      - 8000:8000
+      - "8000:8000"
     volumes:
-      - ./djangoapp:/djangoapp
+      - ./djangoapp:/app
       - ./data/web/static:/data/web/static/
       - ./data/web/media:/data/web/media/
     env_file:
       - ./dotenv_files/.env
     depends_on:
-      - psql
+      psql:
+        condition: service_healthy
+    restart: unless-stopped
+
   psql:
     container_name: psql
     image: postgres:13-alpine
@@ -22,3 +25,9 @@ services:
       - ./data/postgres/data:/var/lib/postgresql/data/
     env_file:
       - ./dotenv_files/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
